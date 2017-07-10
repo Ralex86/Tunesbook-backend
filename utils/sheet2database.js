@@ -1,6 +1,6 @@
 var mysql = require('mysql')
 var abc = require('./abc2svg.js')
-var myconf = require('./config.json')
+var myconf = require('./../config.json')
 
 class Sheet2sql{
     constructor(){
