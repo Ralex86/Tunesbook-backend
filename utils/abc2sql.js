@@ -12,7 +12,7 @@ class Abc2sql {
         this.file = file
         this.lineReader = readline.createInterface({input: fs.createReadStream(file)})
 
-        this.inHeader = this.inHeader.bin(this)
+        this.inHeader = this.inHeader.bind(this)
         this.run = this.run.bind(this)
         this.readLine = this.readLine.bind(this)
         this.addslashes = this.addslashes.bind(this)
@@ -58,13 +58,13 @@ class Abc2sql {
                 this.tunes[this.currentId -1].body = ""
             } else {
                 if (field === "T"){
-                    this.tunes[this.currentId -1][field] = this.addslashes(fieldValue)
+                    this.tunes[this.currentId -1][field] = (this.tunes[this.currentId -1][field]) ? this.tunes[this.currentId -1][field] + this.addslashes(fieldValue) + '\n' : this.addslashes(fieldValue) + '\n'
                 } else {
                     this.tunes[this.currentId -1][field] = fieldValue
                 }
             }
         } else { 
-            this.tunes[this.currentId -1].body += this.addslashes(`${line}\n`)
+            this.tunes[this.currentId -1].body += this.addslashes(line) + '\n'
         }
     }
 }
@@ -75,15 +75,15 @@ var readTunes = new Abc2sql('tunebook.abc', 0)
 // Lets the fun begin
 
 readTunes.run((tunebook) => {
-    for(var i = 0; i < tunebook.length; i++){
-        // T, R, M, K, body
-        logger.write(`INSERT INTO Tunes (T,R,M,K,body) VALUES(
-        "${tunebook[i].T}",
-        "${tunebook[i].R}",
-        "${tunebook[i].M}",
-        "${tunebook[i].K}",
-        "${tunebook[i].body}");\n`)
-    }
-
+for(var i = 0; i < tunebook.length; i++){
+// T, R, M, K, body
+logger.write(`
+INSERT INTO Jigs (T,R,M,K,body) VALUES(
+"${tunebook[i].T}",
+"${tunebook[i].R}",
+"${tunebook[i].M}",
+"${tunebook[i].K}",
+"${tunebook[i].body}");\n`)
+}
     logger.end()
 })

@@ -3,10 +3,12 @@ var abc = require('./abc2svg.js')
 var myconf = require('./../config.json')
 
 class Sheet2sql{
-    constructor(){
+    constructor(src_table, dest_table){
         this.svg = ""
         this.tuneID = null
         this.src = ""
+        this.src_table = src_table
+        this.dest_table = dest_table
 
         this.connection = mysql.createConnection({
             host: myconf.host,
@@ -23,8 +25,8 @@ class Sheet2sql{
     run(){
         this.connection.connect((err) => {
             if (err) throw err
-
-            this.connection.query('SELECT * FROM Tunes' (error, result, fields) => {
+            let sql = `SELECT * FROM ${this.table}` 
+            this.connection.query(sql, (error, result, fields) => {
                 if (error) throw error
 
                 console.log(result)
@@ -40,7 +42,7 @@ class Sheet2sql{
                     ${result[i].body}`
 
                     this.convert(this.src, (svg) => {
-                        var sql = `INSERT INTO Svg (tuneID, svg) VALUES (
+                        let sql = `INSERT INTO ${this.dest_table} (tuneID, svg) VALUES (
                         ${result[i].id}, 
                         "${this.mysql_real_escape_string(svg)}")`
                         
@@ -99,5 +101,5 @@ class Sheet2sql{
     }
 }
 
-var addTuples = new Sheet2sql
+var addTuples = new Sheet2sql("Jigs", "SVGJIGS")
 addTuples.run()
