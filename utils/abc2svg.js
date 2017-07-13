@@ -17,7 +17,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with abc2svg-core.  If not, see <http://www.gnu.org/licenses/>.
-//"use strict"
+"use strict"
 const abc2svg = {
     version: "1.12.15",
     vdate: "2017-07-07"
@@ -14890,3 +14890,5 @@ function Abc(user) {
     abc2svg_init();
     return this
 }
+
+module.exports = { Abc }

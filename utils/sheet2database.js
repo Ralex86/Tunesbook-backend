@@ -1,5 +1,5 @@
 var mysql = require('mysql')
-var abc = require('./abc2svg.js')
+var {Abc} = require('./abc2svg.js')
 var myconf = require('./../config.json')
 
 class Sheet2sql{
@@ -25,21 +25,20 @@ class Sheet2sql{
     run(){
         this.connection.connect((err) => {
             if (err) throw err
-            let sql = `SELECT * FROM ${this.table}` 
+            let sql = `SELECT * FROM ${this.src_table}` 
             this.connection.query(sql, (error, result, fields) => {
                 if (error) throw error
 
-                console.log(result)
+                //console.log(result)
 
                 for(var i=0; i<result.length;i++){
                     this.tuneID = result[i].id
-                    this.src = `
-                    X: ${result[i].id}\n
-                    T: ${result[i].T}\n
-                    R: ${result[i].R}\n
-                    M: ${result[i].M}\n
-                    K: ${result[i].K}\n
-                    ${result[i].body}`
+                    this.src =  `X: ${result[i].id}\n` +
+                                `T: ${result[i].T}\n` +
+                                `R: ${result[i].R}\n` + 
+                                `M: ${result[i].M}\n` + 
+                                `K: ${result[i].K}\n` +
+                                `${result[i].body}`
 
                     this.convert(this.src, (svg) => {
                         let sql = `INSERT INTO ${this.dest_table} (tuneID, svg) VALUES (
@@ -90,14 +89,14 @@ class Sheet2sql{
                     callback(this.svg)
             },
             errmsg: function(msg,l,c){
-                errtxt += mssg + '\n'
+                errtxt += msg + '\n'
                 console.log(errtxt)
                 console.log('line, column', l, c)
             },
             page_format: true
         }
-        var a = new abc.Abc(user)
-        a.tosvg("a", src)
+        var abc = new Abc(user)
+        abc.tosvg("a", src)
     }
 }
 
