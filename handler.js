@@ -25,6 +25,7 @@ class Handle {
         })
 
         this.database_tunes = this.database_tunes.bind(this)
+        this.database_svg = this.database_svg.bind(this)
         this.database_name = this.database_name.bind(this)
     }
 
@@ -35,7 +36,7 @@ class Handle {
                 return
             }
 
-            connection.query("select * from Tunes", (err,rows) => {
+            connection.query(`select * from ${this.req.params.rhythm}`, (err,rows) => {
                 connection.release()
                 if(!err){
                     this.res.json(rows)
@@ -48,15 +49,15 @@ class Handle {
             })
         })
     }
-
-    database_tuneID(){
+    
+    database_svg(){
         pool.getConnection((err, connection) => {
             if (err){
                 this.res.json({"code": 100, "status" : "error in connection database"})
                 return
             }
 
-            connection.query(`select svg from Svg WHERE tuneID=${this.req.query.id}`, (err,rows) => {
+            connection.query(`select svg from SVG${this.req.params.rhythm} WHERE tuneID=${this.req.params.id}`, (err,rows) => {
                 connection.release()
                 if(!err){
                     this.res.json(rows)

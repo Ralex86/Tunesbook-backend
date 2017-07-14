@@ -25,8 +25,8 @@ class Sheet2sql{
     run(){
         this.connection.connect((err) => {
             if (err) throw err
-            let sql = `SELECT * FROM ${this.src_table}` 
-            this.connection.query(sql, (error, result, fields) => {
+            var query = `SELECT * FROM ${this.src_table}` 
+            this.connection.query(query, (error, result, fields) => {
                 if (error) throw error
 
                 //console.log(result)
@@ -34,18 +34,18 @@ class Sheet2sql{
                 for(var i=0; i<result.length;i++){
                     this.tuneID = result[i].id
                     this.src =  `X: ${result[i].id}\n` +
-                                `T: ${result[i].T}\n` +
+                                `T: ${result[i].T.split('\n').splice(1)}\n` +
                                 `R: ${result[i].R}\n` + 
                                 `M: ${result[i].M}\n` + 
                                 `K: ${result[i].K}\n` +
-                                `${result[i].body}`
+                                `${result[i].body}\n`
 
                     this.convert(this.src, (svg) => {
-                        let sql = `INSERT INTO ${this.dest_table} (tuneID, svg) VALUES (
+                        var insert = `INSERT INTO ${this.dest_table} (tuneID, svg) VALUES (
                         ${result[i].id}, 
                         "${this.mysql_real_escape_string(svg)}")`
                         
-                        this.connection.query(sql, (err, result) => {
+                        this.connection.query(insert, (err, result) => {
                             if (err) throw err
                             console.log("1 record inserted")
                         })

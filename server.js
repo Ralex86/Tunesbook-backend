@@ -22,15 +22,16 @@ app.use((req, res, next) => {
     next()
 })
 
-app.get("/tunes", (req,res)=> {
+app.get("/tunes/:rhythm", (req,res)=> {
     let h = new Handle(req,res)
     h.database_tunes()
 })
 
-app.get("/tune", (req,res)=> {
+
+app.get("/svg/:rhythm/:id", (req,res)=> {
     let h = new Handle(req,res)
  //   console.log(h)
-    h.database_tuneID()
+    h.database_svg()
 })
 
 app.get("/name", (req,res)=> {
