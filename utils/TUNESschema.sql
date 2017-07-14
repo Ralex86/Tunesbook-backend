@@ -1,0 +1,9 @@
+CREATE TABLE jigs (
+    id int NOT NULL AUTO_INCREMENT,
+    T VARCHAR(50),
+    R VARCHAR(50), 
+    M VARCHAR(50), 
+    K VARCHAR(50),
+    body VARCHAR(500),
+    PRIMARY KEY(id)
+);

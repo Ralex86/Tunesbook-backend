@@ -2,6 +2,8 @@ var mysql = require('mysql')
 var {Abc} = require('./abc2svg.js')
 var myconf = require('./../config.json')
 
+var TABLE_NAME = process.argv[2]
+
 class Sheet2sql{
     constructor(src_table, dest_table){
         this.svg = ""
@@ -34,7 +36,7 @@ class Sheet2sql{
                 for(var i=0; i<result.length;i++){
                     this.tuneID = result[i].id
                     this.src =  `X: ${result[i].id}\n` +
-                                `T: ${result[i].T.split('\n').splice(1)}\n` +
+                                `T: ${result[i].T.split('\n')[0]}\n` +
                                 `R: ${result[i].R}\n` + 
                                 `M: ${result[i].M}\n` + 
                                 `K: ${result[i].K}\n` +
@@ -100,5 +102,5 @@ class Sheet2sql{
     }
 }
 
-var addTuples = new Sheet2sql("Jigs", "SVGJIGS")
+var addTuples = new Sheet2sql(TABLE_NAME, `SVG${TABLE_NAME}`)
 addTuples.run()

@@ -1,7 +1,9 @@
 var fs = require('fs')
 var readline = require('readline')
 
-var logger = fs.createWriteStream('tunebook.sql', {
+var SRC_FILE = process.argv[2]
+
+var logger = fs.createWriteStream(`${SRC_FILE}.sql`, {
     flags: 'a' // 'a' means appending (old data will be preserved)
 })
 
@@ -70,7 +72,7 @@ class Abc2sql {
 }
 
 var tunebook
-var readTunes = new Abc2sql('tunebook.abc', 0)
+var readTunes = new Abc2sql(`${SRC_FILE}.abc`, 0)
 
 // Lets the fun begin
 
@@ -78,7 +80,7 @@ readTunes.run((tunebook) => {
 for(var i = 0; i < tunebook.length; i++){
 // T, R, M, K, body
 logger.write(`
-INSERT INTO Jigs (T,R,M,K,body) VALUES(
+INSERT INTO ${SRC_FILE} (T,R,M,K,body) VALUES(
 "${tunebook[i].T}",
 "${tunebook[i].R}",
 "${tunebook[i].M}",
