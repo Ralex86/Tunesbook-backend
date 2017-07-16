@@ -89,3 +89,13 @@ INSERT INTO ${SRC_FILE} (T,R,M,K,body) VALUES(
 }
     logger.end()
 })
+
+
+//readTunes.run((tunebook) => {
+//for(var i = 0; i < tunebook.length; i++){
+//// T, R, M, K, body
+//logger.write(`
+//UPDATE ${SRC_FILE} SET T="${tunebook[i].T}" WHERE id=${i+1};`)
+//}
+//    logger.end()
+//})
