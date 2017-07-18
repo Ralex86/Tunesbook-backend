@@ -34,6 +34,13 @@ app.get("/svg/:rhythm/:id", (req,res)=> {
     h.database_svg()
 })
 
+
+app.get("/youtube/:rhythm/:id", (req,res)=> {
+    let h = new Handle(req,res)
+ //   console.log(h)
+    h.database_youtube()
+})
+
 app.get("/name", (req,res)=> {
     let h = new Handle(req,res)
   //  console.log(h)

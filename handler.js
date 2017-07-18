@@ -26,6 +26,7 @@ class Handle {
 
         this.database_tunes = this.database_tunes.bind(this)
         this.database_svg = this.database_svg.bind(this)
+        this.database_youtube = this.database_youtube.bind(this)
         this.database_name = this.database_name.bind(this)
     }
 
@@ -71,6 +72,26 @@ class Handle {
         })
     }
     
+    database_youtube(){
+        pool.getConnection((err, connection) => {
+            if (err){
+                this.res.json({"code": 100, "status" : "error in connection database"})
+                return
+            }
+
+            connection.query(`select youtubeID, title, id from youtube WHERE tuneID=${this.req.params.id} AND rhythm="${this.req.params.rhythm }"`, (err,rows) => {
+                connection.release()
+                if(!err){
+                    this.res.json(rows)
+                }
+            })
+
+            connection.on('error', (err) => {
+                this.res.json({"code": 100, "status": "error in connection database"})
+                return
+            })
+        })
+    }
     database_name(){
         pool.getConnection((err, connection) => {
             if (err){
