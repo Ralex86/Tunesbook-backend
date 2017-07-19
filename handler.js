@@ -1,5 +1,6 @@
 var mysql = require('mysql')
 var myconf = require('./config.json')
+var getYouTubeID = require('get-youtube-id');
 
 var pool = mysql.createPool({
     connectionLimit: 100, //important
@@ -28,6 +29,35 @@ class Handle {
         this.database_svg = this.database_svg.bind(this)
         this.database_youtube = this.database_youtube.bind(this)
         this.database_name = this.database_name.bind(this)
+    }
+
+    database_submit_video(){
+        pool.getConnection((err, connection) => {
+            if (err){
+                this.res.json({
+                    "code": 100, 
+                    "status" : "error in connection database"})
+                return
+            }
+
+            var title = this.req.body.title
+            var youtubeID = getYouTubeID(this.req.body.url)
+            var tuneID = this.req.body.tuneid
+            var rhythm = this.req.body.rhythm
+
+            var sql = `INSERT INTO youtube (tuneID, rhythm, youtubeID, title) VALUES (${tuneID},"${rhythm}","${youtubeID}","${title}");`
+            connection.query(sql, (err,rows) => {
+                connection.release()
+                if(!err){
+                    this.res.json({"success" : "Video added to the database"})
+                }
+            })
+
+            connection.on('error', (err) => {
+                this.res.json({"code": 100, "status": "error in connection database"})
+                return
+            })
+        })
     }
 
     database_tunes(){

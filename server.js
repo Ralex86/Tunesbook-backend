@@ -2,6 +2,7 @@ const express = require("express")
 const http = require('http')
 const socketIO = require('socket.io')
 const fetch = require('node-fetch')
+var bodyParser = require("body-parser"); // Body parser for fetch posted data
 
 const {Users} = require('./users.js')
 const {generateMessage} = require('./message.js')
@@ -16,10 +17,47 @@ const path = require("path")
 var users = new Users()
 //middlewares
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Acess-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    next()
+//app.use((req, res, next) => {
+//    res.header("Access-Control-Allow-Origin", "*")
+//    res.header("Acess-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+//    res.header("Access-Control-Allow-Methods","GET, POST")
+//    next()
+//})
+
+app.use(function(req, res, next) {
+    var oneof = false
+    if(req.headers.origin) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin)
+        oneof = true
+    }
+    if(req.headers['access-control-request-method']) {
+        res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method'])
+        oneof = true
+    }
+    if(req.headers['access-control-request-headers']) {
+        res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers'])
+        oneof = true
+    }
+    if(oneof) {
+        res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365)
+    }
+
+    // intercept OPTIONS method
+    if (oneof && req.method == 'OPTIONS') {
+        res.sendStatus(200)
+    }
+    else {
+        next()
+    }
+})
+
+
+app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json()); // Body parser use JSON data
+
+app.post('/submitvideo', (req,res) => {
+    let h = new Handle(req,res)
+    h.database_submit_video()
 })
 
 app.get("/tunes/:rhythm", (req,res)=> {
