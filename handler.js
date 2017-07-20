@@ -40,14 +40,14 @@ class Handle {
             }
 
 
-            let sql= `(SELECT SUBSTRING_INDEX(reels.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, reels WHERE Y.rhythm = 'reels' AND reels.id = Y.tuneID) 
+            let sql= `(SELECT SUBSTRING_INDEX(reels.T,'\n',1) AS title, (Y.CreatedOn) as CreatedOn FROM youtube Y, reels WHERE Y.rhythm = 'reels' AND reels.id = Y.tuneID) 
     UNION 
-    (SELECT SUBSTRING_INDEX(jigs.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, jigs WHERE Y.rhythm = 'jigs' AND jigs.id = Y.tuneID) UNION 
-    (SELECT SUBSTRING_INDEX(slowsession.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, slowsession WHERE Y.rhythm = 'slowsession' AND slowsession.id = Y.tuneID)
+    (SELECT SUBSTRING_INDEX(jigs.T,'\n',1) AS title, (Y.CreatedOn) as CreatedOn FROM youtube Y, jigs WHERE Y.rhythm = 'jigs' AND jigs.id = Y.tuneID) UNION 
+    (SELECT SUBSTRING_INDEX(slowsession.T,'\n',1) AS title, (Y.CreatedOn) as CreatedOn FROM youtube Y, slowsession WHERE Y.rhythm = 'slowsession' AND slowsession.id = Y.tuneID)
     UNION
-    (SELECT SUBSTRING_INDEX(hornpipes.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, hornpipes WHERE Y.rhythm = 'hornpipes' AND hornpipes.id = Y.tuneID)
+    (SELECT SUBSTRING_INDEX(hornpipes.T,'\n',1) AS title, (Y.CreatedOn) as CreatedOn FROM youtube Y, hornpipes WHERE Y.rhythm = 'hornpipes' AND hornpipes.id = Y.tuneID)
     UNION
-    (SELECT SUBSTRING_INDEX(polkas.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, polkas WHERE Y.rhythm = 'polkas' AND polkas.id = Y.tuneID)
+    (SELECT SUBSTRING_INDEX(polkas.T,'\n',1) AS title, (Y.CreatedOn) as CreatedOn FROM youtube Y, polkas WHERE Y.rhythm = 'polkas' AND polkas.id = Y.tuneID)
     ORDER BY CreatedOn DESC LIMIT 10`
 
             connection.query(sql, (err,rows) => {
