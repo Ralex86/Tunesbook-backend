@@ -29,7 +29,41 @@ class Handle {
         this.database_svg = this.database_svg.bind(this)
         this.database_youtube = this.database_youtube.bind(this)
         this.database_name = this.database_name.bind(this)
+        this.database_latest = this.database_latest.bind(this)
     }
+
+    database_latest(){
+        pool.getConnection((err, connection) => {
+            if (err){
+                this.res.json({"code": 100, "status" : "error in connection database"})
+                return
+            }
+
+
+            let sql= `(SELECT SUBSTRING_INDEX(reels.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, reels WHERE Y.rhythm = 'reels' AND reels.id = Y.tuneID) 
+    UNION 
+    (SELECT SUBSTRING_INDEX(jigs.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, jigs WHERE Y.rhythm = 'jigs' AND jigs.id = Y.tuneID) UNION 
+    (SELECT SUBSTRING_INDEX(slowsession.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, slowsession WHERE Y.rhythm = 'slowsession' AND slowsession.id = Y.tuneID)
+    UNION
+    (SELECT SUBSTRING_INDEX(hornpipes.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, hornpipes WHERE Y.rhythm = 'hornpipes' AND hornpipes.id = Y.tuneID)
+    UNION
+    (SELECT SUBSTRING_INDEX(polkas.T,'\n',1) AS title, date(Y.CreatedOn) as CreatedOn FROM youtube Y, polkas WHERE Y.rhythm = 'polkas' AND polkas.id = Y.tuneID)
+    ORDER BY CreatedOn DESC LIMIT 10`
+
+            connection.query(sql, (err,rows) => {
+                connection.release()
+                if(!err){
+                    this.res.json(rows)
+                }
+            })
+
+            connection.on('error', (err) => {
+                this.res.json({"code": 100, "status": "error in connection database"})
+                return
+            })
+        })
+    }
+
 
     database_submit_video(){
         pool.getConnection((err, connection) => {

@@ -60,6 +60,11 @@ app.post('/submitvideo', (req,res) => {
     h.database_submit_video()
 })
 
+app.get("/latest", (req,res) => {
+    let h = new Handle(req,res)
+    h.database_latest()
+})
+
 app.get("/tunes/:rhythm", (req,res)=> {
     let h = new Handle(req,res)
     h.database_tunes()
